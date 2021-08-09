@@ -47,7 +47,9 @@ contract('Lottery', accounts => {
             let transaction = await lottery.endLottery({ from: defaultAccount })
             let requestId = transaction.receipt.rawLogs[3].topics[0]
 
-            await vrfCoordinatorMock.callBackWithRandomness(requestId, '3', lottery.address, { from: defaultAccount })
+            // callBackWithRandomness(bytes32 requestId, uint256 randomness, address consumerContract)
+            // randomness being 3 means that 'uint256 index = randomness % players.length = 0' => Players[0] = player1
+            await vrfCoordinatorMock.callBackWithRandomness(requestId, '3', lottery.address, { from: defaultAccount }) 
             let recentWinner = await lottery.recentWinner()
             assert.equal(recentWinner, player1)
         })
